@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PANDIYAS – Multicuisine Family Restaurant, Tiruppur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --crimson: #9B1C1C;
+      --ember: #C2410C;
+      --saffron: #D97706;
+      --cream: #FEF3C7;
+      --ivory: #FFFBF0;
+      --charcoal: #1C1410;
+      --warm-gray: #78716C;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background-color: var(--ivory);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      transition: all 0.4s ease;
+      padding: 1.5rem 0;
+    }
+    #navbar.scrolled {
+      background: rgba(28, 20, 16, 0.97);
+      backdrop-filter: blur(12px);
+      padding: 0.9rem 0;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+    #navbar .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+    #navbar .logo-sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--saffron);
+      text-transform: uppercase;
+      display: block;
+      margin-top: -3px;
+    }
+    #navbar a.nav-link {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      position: relative;
+      transition: color 0.3s;
+      text-decoration: none;
+    }
+    #navbar a.nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--saffron);
+      transition: width 0.3s ease;
+    }
+    #navbar a.nav-link:hover { color: #fff; }
+    #navbar a.nav-link:hover::after { width: 100%; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--ember), var(--crimson));
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      padding: 0.75rem 2rem;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--saffron), var(--ember));
+      transition: left 0.35s ease;
+    }
+    .btn-primary:hover::before { left: 0; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(155,28,28,0.5); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.6);
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      padding: 0.75rem 2rem;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #fff;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg,
+          rgba(28,20,16,0.75) 0%,
+          rgba(155,28,28,0.55) 40%,
+          rgba(194,65,12,0.45) 70%,
+          rgba(28,20,16,0.82) 100%),
+        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&auto=format&fit=crop&q=80') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(217,119,6,0.15) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(217,119,6,0.2);
+      border: 1px solid rgba(217,119,6,0.5);
+      color: var(--saffron);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .hero-badge .star { color: var(--saffron); }
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.08;
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      margin-bottom: 1.25rem;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--saffron);
+    }
+    .hero-sub {
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── DECORATIVE DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0 auto 2.5rem;
+      max-width: 300px;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--saffron));
+    }
+    .divider-line.right {
+      background: linear-gradient(to left, transparent, var(--saffron));
+    }
+    .divider-icon { color: var(--ember); font-size: 1.1rem; }
+
+    /* ── SECTION HEADINGS ── */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ember);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--charcoal);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--ivory);
+      position: relative;
+    }
+    #about::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: linear-gradient(to right, var(--crimson), var(--saffron), var(--ember));
+    }
+    .stat-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(155,28,28,0.15);
+      background: #fff;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: linear-gradient(to right, var(--crimson), var(--saffron));
+      transition: width 0.4s ease;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(155,28,28,0.12); }
+    .stat-card:hover::before { width: 100%; }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--crimson);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-top: 0.4rem;
+      font-weight: 600;
+    }
+
+    .cuisine-tag {
+      display: inline-block;
+      background: var(--cream);
+      border: 1px solid rgba(217,119,6,0.35);
+      color: var(--ember);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.3rem 0.85rem;
+      margin: 0.25rem;
+    }
+
+    /* ── FEATURES ── */
+    #features {
+      background: var(--charcoal);
+      position: relative;
+      overflow: hidden;
+    }
+    #features::before {
+      content: 'PANDIYAS';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(5rem, 15vw, 14rem);
+      font-weight: 900;
+      color: rgba(255,255,255,0.025);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.1em;
+    }
+    .feature-card {
+      padding: 2.5rem 2rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(to right, var(--crimson), var(--saffron));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .feature-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-4px); }
+    .feature-card:hover::before { transform: scaleX(1); }
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.88rem;
+      line-height: 1.75;
+    }
+
+    /* ── INFO / CONTACT ── */
+    #info {
+      background: linear-gradient(145deg, var(--crimson) 0%, #7B0D0D 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #info::after {
+      content: '';
+      position: absolute;
+      top: -50%; right: -10%;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217,119,6,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .info-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      transition: background 0.3s;
+    }
+    .info-card:hover { background: rgba(255,255,255,0.13); }
+    .info-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .info-card h4 {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .info-card p, .info-card a {
+      color: rgba(255,255,255,0.88);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      text-decoration: none;
+    }
+    .info-card a:hover { color: var(--saffron); }
+
+    /* ── MAP PLACEHOLDER ── */
+    .map-placeholder {
+      background: rgba(0,0,0,0.3);
+      border: 1px dashed rgba(255,255,255,0.2);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0D0A08;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .social-btn {
+      width: 44px; height: 44px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+      transform: translateY(-3px);
+    }
+
+    /* ── MOBILE MENU ── */
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(12,8,6,0.98);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    #mobile-menu.open { display: flex; }
+    #mobile-menu a {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+    #mobile-menu a:hover { color: var(--saffron); }
+
+    /* ── FADE IN ANIMATION ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ── STARS ── */
+    .stars { color: var(--saffron); letter-spacing: 2px; font-size: 1.1rem; }
+
+    @media (max-width: 768px) {
+      .hero-headline { font-size: 2.2rem; }
+      .hero-sub { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <a href="#hero" class="flex flex-col leading-none">
+      <span class="logo-text">PANDIYAS</span>
+      <span class="logo-sub">Multicuisine Family Restaurant</span>
+    </a>
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#features" class="nav-link">Why Us</a>
+      <a href="#info" class="nav-link">Visit</a>
+      <a href="tel:+918190001303" class="btn-primary"><span>📞 Reserve a Table</span></a>
+    </div>
+    <!-- Hamburger -->
+    <button id="hamburger" class="md:hidden text-white p-2" onclick="toggleMenu()">
+      <svg id="icon-open" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <svg id="icon-close" class="hidden" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#features" onclick="toggleMenu()">Why Us</a>
+  <a href="#info" onclick="toggleMenu()">Visit</a>
+  <a href="tel:+918190001303" style="font-size:1.1rem; color: #D97706; font-family: 'Raleway', sans-serif; letter-spacing: 0.15em;">📞 +91 81900 01303</a>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content text-center px-6 max-w-4xl mx-auto">
+    <div class="hero-badge" style="animation: fadeIn 0.8s ease both;">
+      <span class="star">★</span>
+      <span>4.2 Stars · Tiruppur's Beloved Dining Destination</span>
+    </div>
+    <h1 class="hero-headline" style="animation: slideUp 0.9s ease 0.2s both;">
+      A Perfect Dining<br/><em>Experience</em> for the<br/>Whole Family
+    </h1>
+    <p class="hero-sub mx-auto" style="animation: slideUp 0.9s ease 0.4s both;">
+      Multicuisine Delights in the heart of Tiruppur — where every meal is a celebration of flavour, family, and warmth.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center" style="animation: slideUp 0.9s ease 0.55s both;">
+      <a href="#features" class="btn-primary"><span>View Menu ↓</span></a>
+      <a href="#info" class="btn-outline">Find Us</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <!-- Text -->
+      <div class="fade-up">
+        <span class="section-label">Our Story</span>
+        <h2 class="section-heading text-4xl md:text-5xl mb-6">
+          Where Flavours<br/>Find a Home
+        </h2>
+        <div class="divider" style="margin: 0 0 1.75rem;">
+          <div class="divider-line"></div>
+          <span class="divider-icon">✦</span>
+          <div class="divider-line right"></div>
+        </div>
+        <p style="color: var(--warm-gray); line-height: 1.9; font-size: 0.95rem; margin-bottom: 1.25rem;">
+          At <strong style="color: var(--charcoal);">PANDIYAS Multicuisine Family Restaurant</strong>, we believe a great meal is more than food — it's a memory made. Nestled on Dharapuram Main Road in Kovilvazhi, Tiruppur, we've become a cherished gathering place for families, friends, and food lovers.
+        </p>
+        <p style="color: var(--warm-gray); line-height: 1.9; font-size: 0.95rem; margin-bottom: 2rem;">
+          From aromatic South Indian classics to sizzling North Indian gravies, Indo-Chinese favourites, and continental bites — our kitchen speaks every food language with equal love and skill.
+        </p>
+        <div style="margin-bottom: 1.5rem;">
+          <span class="stars">★★★★☆</span>
+          <span style="font-size: 0.8rem; color: var(--warm-gray); margin-left: 0.5rem; font-weight: 600;">4.2 / 5 — Loved by our guests</span>
+        </div>
+        <div>
+          <span class="cuisine-tag">South Indian</span>
+          <span class="cuisine-tag">North Indian</span>
+          <span class="cuisine-tag">Indo-Chinese</span>
+          <span class="cuisine-tag">Continental</span>
+          <span class="cuisine-tag">Biryani</span>
+          <span class="cuisine-tag">Seafood</span>
+          <span class="cuisine-tag">Desserts</span>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="fade-up delay-2">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="stat-card">
+            <div class="stat-number">4.2<span style="font-size:1.4rem;">★</span></div>
+            <div class="stat-label">Guest Rating</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Cuisine Styles</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Hours Open Daily</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">👨‍👩‍👧</div>
+            <div class="stat-label">Family Friendly</div>
+          </div>
+        </div>
+        <!-- Image Card -->
+        <div style="margin-top: 1.5rem; position: relative; overflow: hidden; height: 200px;">
+          <img
+            src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&auto=format&fit=crop&q=75"
+            alt="Restaurant ambience"
+            style="width:100%; height:100%; object-fit:cover; display:block;"
+          />
+          <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(28,20,16,0.7), transparent);"></div>
+          <div style="position:absolute; bottom:1rem; left:1.25rem; color:#fff;">
+            <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;">Warm. Welcoming. Wonderful.</div>
+            <div style="font-size:0.7rem; color:rgba(255,255,255,0.65); letter-spacing:0.1em; margin-top:2px;">Kovilvazhi, Tiruppur</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section id="features" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 fade-up">
+      <span class="section-label" style="color: var(--saffron);">Why PANDIYAS</span>
+      <h2 class="section-heading text-4xl md:text-5xl" style="color: #fff;">
+        Crafted for Every<br/>Family Moment
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-px" style="background: rgba(255,255,255,0.06);">
+      <div class="feature-card fade-up delay-1">
+        <span class="feature-icon">🍽️</span>
+        <h3>Diverse Menu</h3>
+        <p>From aromatic biryanis and rich curries to crispy starters and comforting desserts — our sprawling menu has something to delight every palate, young or old.</p>
+      </div>
+      <div class="feature-card fade-up delay-2">
+        <span class="feature-icon">👨‍👩‍👧‍👦</span>
+        <h3>Great for Families</h3>
+        <p>Spacious, comfortable seating, a warm and attentive team, and a noise-friendly environment make PANDIYAS the perfect backdrop for your family celebrations.</p>
+      </div>
+      <div class="feature-card fade-up delay-3">
+        <span class="feature-icon">📍</span>
+        <h3>Prime Location</h3>
+        <p>Conveniently located on Dharapuram Main Road near Bharath Petrol Bunk in Kovilvazhi — easily accessible from all parts of Tiruppur city.</p>
+      </div>
+      <div class="feature-card fade-up delay-1">
+        <span class="feature-icon">⏰</span>
+        <h3>Open Every Day</h3>
+        <p>We're open seven days a week, from 12:00 PM to 10:30 PM, so you can count on us for lazy Sunday lunches and midweek dinner plans alike.</p>
+      </div>
+      <div class="feature-card fade-up delay-2">
+        <span class="feature-icon">👨‍🍳</span>
+        <h3>Expert Chefs</h3>
+        <p>Our kitchen team brings years of culinary expertise across multiple cuisines, ensuring every dish is prepared with fresh ingredients and deep passion.</p>
+      </div>
+      <div class="feature-card fade-up delay-3">
+        <span class="feature-icon">💫</span>
+        <h3>4.2★ Rated</h3>
+        <p>Our guests speak for us. With a 4.2-star rating built on genuine reviews, we take pride in the love and trust our community places in us every day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INFO / CONTACT ═══ -->
+<section id="info" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto" style="position: relative; z-index: 1;">
+    <div class="text-center mb-16 fade-up">
+      <span class="section-label" style="color: var(--saffron);">Plan Your Visit</span>
+      <h2 class="section-heading text-4xl md:text-5xl" style="color: #fff;">
+        We'd Love to<br/>Welcome You
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <!-- Hours -->
+      <div class="info-card fade-up delay-1">
+        <span class="info-icon">🕐</span>
+        <div>
+          <h4>Opening Hours</h4>
+          <p>Monday – Sunday<br/><strong style="color:#fff; font-size:1.05rem;">12:00 PM – 10:30 PM</strong><br/><span style="font-size:0.8rem; color:rgba(255,255,255,0.5);">Open all 7 days</span></p>
+        </div>
+      </div>
+      <!-- Phone -->
+      <div class="info-card fade-up delay-2">
+        <span class="info-icon">📞</span>
+        <div>
+          <h4>Phone / Reservations</h4>
+          <a href="tel:+918190001303"><strong style="font-size:1.1rem;">+91 81900 01303</strong></a>
+          <p style="font-size:0.82rem; margin-top:0.4rem; color:rgba(255,255,255,0.55);">Call to reserve your table or pre-order</p>
+        </div>
+      </div>
+      <!-- Address -->
+      <div class="info-card fade-up delay-3">
+        <span class="info-icon">📍</span>
+        <div>
+          <h4>Address</h4>
+          <p>Dharapuram Main Rd,<br/>Near Bharath Petrol Bunk,<br/>Kovilvazhi,<br/><strong style="color:#fff;">Tiruppur – 641606</strong></p>
+        </div>
+      </div>
+    </div>
+    <!-- Map placeholder -->
+    <div class="fade-up delay-2">
+      <div class="map-placeholder">
+        <div class="text-center">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">🗺️</div>
+          <div>Dharapuram Main Rd, Kovilvazhi, Tiruppur 641606</div>
+          <a href="https://maps.google.com/?q=Pandiyas+Multicuisine+Family+Restaurant+Tiruppur" target="_blank" style="color: var(--saffron); text-decoration: underline; font-size: 0.75rem; margin-top: 0.5rem; display: block;">Open in Google Maps →</a>
+        </div>
+      </div>
+    </div>
+    <!-- CTA -->
+    <div class="text-center mt-12 fade-up">
+      <p style="color:rgba(255,255,255,0.65); font-size:0.9rem; margin-bottom:1.5rem;">Ready for a memorable meal? Give us a call and we'll take care of the rest.</p>
+      <a href="tel:+918190001303" class="btn-primary" style="background: linear-gradient(135deg, var(--saffron), var(--ember)); font-size:0.85rem; padding: 1rem 2.5rem;">
+        <span>📞 Call & Reserve — +91 81900 01303</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="py-12 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+      <!-- Brand -->
+      <div class="text-center md:text-left">
+        <div style="font-family:'Playfair Display',serif; font-weight:900; color:#fff; font-size:1.6rem; letter-spacing:0.08em;">PANDIYAS</div>
+        <div style="font-size:0.62rem; letter-spacing:0.25em; color:var(--saffron); text-transform:uppercase; margin-top:2px;">Multicuisine Family Restaurant</div>
+        <div style="font-size:0.8rem; color:rgba(255,255,255,0.35); margin-top:0.75rem;">Kovilvazhi, Tiruppur 641606</div>
+      </div>
+      <!-- Social -->
+      <div class="flex flex-col items-center gap-3">
+        <span style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.3);">Follow Us</span>
+        <div class="flex gap-3">
+          <a href="#" class="social-btn" title="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-btn" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-btn" title="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          </a>
+          <a href="#" class="social-btn" title="Google Maps">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div class="text-center md:text-right">
+        <div class="flex flex-col gap-2">
+          <a href="#about" style="font-size:0.8rem; color:rgba(255,255,255,0.45); text-decoration:none; letter-spacing:0.08em;" onmouseover="this.style.color='#D97706'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">About</a>
+          <a href="#features" style="font-size:0.8rem; color:rgba(255,255,255,0.45); text-decoration:none; letter-spacing:0.08em;" onmouseover="this.style.color='#D97706'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">Why Choose Us</a>
+          <a href="#info" style="font-size:0.8rem; color:rgba(255,255,255,0.45); text-decoration:none; letter-spacing:0.08em;" onmouseover="this.style.color='#D97706'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">Visit Us</a>
+          <a href="tel:+918190001303" style="font-size:0.8rem; color:rgba(255,255,255,0.45); text-decoration:none; letter-spacing:0.08em;" onmouseover="this.style.color='#D97706'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">+91 81900 01303</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.07); margin-top: 2.5rem; padding-top: 1.5rem; text-align: center;">
+      <p style="font-size: 0.72rem; color: rgba(255,255,255,0.25); letter-spacing: 0.08em;">
+        © 2025 PANDIYAS Multicuisine Family Restaurant, Tiruppur. All Rights Reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  // ── Sticky navbar ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Mobile menu ──
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+    menu.classList.toggle('open');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+
+  // ── Scroll fade-in ──
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  // ── Active nav highlight ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#navbar a.nav-link');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.style.color = '');
+        const active = document.querySelector(`#navbar a[href="#${e.target.id}"]`);
+        if (active) active.style.color = '#D97706';
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px' });
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
